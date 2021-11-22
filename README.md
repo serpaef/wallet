@@ -6,4 +6,4 @@ This application computes expenses in different currencies and converts everythi
 
 The currency quote information will be retrieved from the API endpoint <a href="https://docs.awesomeapi.com.br/api-de-moedas">Cotação de moedas</a>
 
-_currently in progress_
+_currently in progress..._
