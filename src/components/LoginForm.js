@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import './LoginForm.css';
+import { doLogin } from '../actions';
+import { connect } from 'react-redux';
 
-function LoginForm() {
+function LoginForm({dispatchEmail}) {
   const [loginControl, setLoginControl] = useState('');
   const [pwdControl, setPwdControl] = useState('');
   const [emailInvalid, setEmailInvalid] = useState(null);
@@ -25,6 +27,7 @@ function LoginForm() {
     } else if (pwdControl.length < 6) {
       setPasswordInvalid('true');
     } else {
+      dispatchEmail(loginControl);
       navigate('/wallet');
     }
   }
@@ -67,4 +70,8 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchEmail: (value) => dispatch(doLogin(value)),
+});
+
+export default connect(null, mapDispatchToProps)(LoginForm);
