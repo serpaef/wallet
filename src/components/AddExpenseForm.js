@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
+import { currencies, addExpenses } from '../actions';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import './AddExpenseForm.css';
 
-function AddExpenseForm() {
+function AddExpenseForm({dispatchCurrencies, dispatchExpenses}) {
+  const [id, setId] = useState(0);
   const [currency, setCurrency] = useState('');
+  const [currencyList, setCurrencyList] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [tag, setTag] = useState('');
   const [value, setValue] = useState(null);
   const [description, setDescription] = useState('');
+
+  const fetchCurrencies = useCallback(async() => {
+    const request = await fetch('https://economia.awesomeapi.com.br/json/all');
+    const resolve = await request.json();
+    delete resolve.USDT;
+    dispatchCurrencies([...Object.values(resolve)]);
+    setCurrencyList([...Object.keys(resolve)]);
+    //returning for use in storing updated exchange rate when adding expenses
+    return resolve;
+  }, [dispatchCurrencies] )
+
+  useEffect(() => {
+    fetchCurrencies();
+  }, [fetchCurrencies])
 
   const handleCurrencyChange = ({ target: { value } }) => {
     setCurrency(value);
@@ -21,6 +40,22 @@ function AddExpenseForm() {
   }
   const handleTagChange = ({ target: { value } }) => {
     setTag(value);
+  }
+
+  const addExpense = async () => {
+    const exchangeRates = await fetchCurrencies();
+    const obj = {
+      id,
+      currency,
+      value,
+      description,
+      paymentMethod,
+      tag,
+      exchangeRates
+    };
+
+    dispatchExpenses(obj);
+    setId(id + 1);
   }
 
   return (
@@ -34,7 +69,11 @@ function AddExpenseForm() {
           onChange={ handleCurrencyChange }
           label="Currency"
         >
-          <MenuItem value="BRL">BRL</MenuItem>
+          {currencyList.map((currency, index) => (
+            <MenuItem key={index} value={currency}>
+              {currency}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl variant="standard" sx={ { minWidth: 150 } }>
@@ -87,8 +126,20 @@ function AddExpenseForm() {
             <MenuItem value="healthcare">Healthcare</MenuItem>
           </Select>
       </FormControl>
+      <Button
+        variant="outlined"
+        onClick={ addExpense }
+        sx={{m: '0 12px'}}
+      >
+        Add Expense
+      </Button>
     </section>
   );
 }
 
-export default AddExpenseForm;
+const mapDispatchToProps = (dispatch) => ({
+  dispatchCurrencies: (state) => dispatch(currencies(state)),
+  dispatchExpenses: (state) => dispatch(addExpenses(state)),
+});
+
+export default connect(null, mapDispatchToProps)(AddExpenseForm);
