@@ -1,9 +1,13 @@
 import React from 'react';
+import AddExpenseForm from '../components/AddExpenseForm';
 import Header from '../components/Header';
 
 function WalletPage() {
   return (
-    <Header />
+    <>
+      <Header />
+      <AddExpenseForm />
+    </>
   )
 }
 
