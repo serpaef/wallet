@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
@@ -8,16 +8,16 @@ import './Header.css'
 function Header({ email, expenses }) {
   const [total, setTotal] = useState(0);
 
-  const sumExpenses = () => {
+  const sumExpenses = useCallback( () => {
     const total = expenses.reduce((acc, { value, exchangeRates, currency }) => (
       acc + (parseFloat(value) * parseFloat(exchangeRates[currency].ask))
     ), 0);
     setTotal(total);
-  };
+  },[expenses]);
 
   useEffect(() => {
     sumExpenses()
-  },[expenses])
+  },[sumExpenses])
 
   return (
     <header className="header">
