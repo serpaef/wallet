@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 
 function ExpensesTable({ expenses }) {
 
@@ -34,7 +35,7 @@ function ExpensesTable({ expenses }) {
             <TableCell align="right">{ description }</TableCell>
             <TableCell align="right">{ paymentMethod }</TableCell>
             <TableCell align="right">{ tag }</TableCell>
-            <TableCell align="center">{ 'delete' }</TableCell>
+            <TableCell align="center"><Button><BackspaceIcon /></Button></TableCell>
           </TableRow>
         )
       })
