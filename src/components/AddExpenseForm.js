@@ -1,12 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { currencies, addExpenses } from '../actions';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import { FormControl, Select, InputLabel, MenuItem, TextField, Button } from '@mui/material';
 import './AddExpenseForm.css';
 
 function AddExpenseForm({dispatchCurrencies, dispatchExpenses}) {
@@ -105,9 +101,9 @@ function AddExpenseForm({dispatchCurrencies, dispatchExpenses}) {
           label="Payment Method"
         >
           <MenuItem value=""></MenuItem>
-          <MenuItem value="cash">Cash</MenuItem>
-          <MenuItem value="credit-card">Credit Card</MenuItem>
-          <MenuItem value="debit-card">Debit Card</MenuItem>
+          <MenuItem value="Cash">Cash</MenuItem>
+          <MenuItem value="Credit Card">Credit Card</MenuItem>
+          <MenuItem value="Debit Card">Debit Card</MenuItem>
         </Select>
       </FormControl>
       <FormControl variant="standard" sx={ { minWidth: 150 }}>
@@ -119,11 +115,11 @@ function AddExpenseForm({dispatchCurrencies, dispatchExpenses}) {
             onChange={ handleTagChange }
             label="Tag"
           >
-            <MenuItem value="food">Food</MenuItem>
-            <MenuItem value="leisure">Leisure</MenuItem>
-            <MenuItem value="work">Work</MenuItem>
-            <MenuItem value="transport">Transport</MenuItem>
-            <MenuItem value="healthcare">Healthcare</MenuItem>
+            <MenuItem value="Food">Food</MenuItem>
+            <MenuItem value="Leisure">Leisure</MenuItem>
+            <MenuItem value="Work">Work</MenuItem>
+            <MenuItem value="Transport">Transport</MenuItem>
+            <MenuItem value="Healthcare">Healthcare</MenuItem>
           </Select>
       </FormControl>
       <Button
@@ -136,6 +132,11 @@ function AddExpenseForm({dispatchCurrencies, dispatchExpenses}) {
     </section>
   );
 }
+
+AddExpenseForm.propTypes = {
+  dispatchCurrencies: PropTypes.func,
+  dispatchExpenses: PropTypes.func
+}.isRequired;
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchCurrencies: (state) => dispatch(currencies(state)),
