@@ -12,6 +12,10 @@ const wallet = (state = INITIAL_STATE, action) => {
         {...action.value}
       ],
     };
+  case 'REMOVE_EXPENSE':
+    return { ...state,
+      expenses: [...action.value]
+    }
   case 'CURRENCIES':
     return { ...state,
       currencies: [...action.value],

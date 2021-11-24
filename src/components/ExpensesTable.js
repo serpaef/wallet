@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { removeExpense } from '../actions';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 
-function ExpensesTable({ expenses }) {
+function ExpensesTable({ expenses, dispatchExpenses }) {
+  const [table, setTable] = useState([]);
 
   function TableHeader() {
     return (
@@ -21,10 +23,15 @@ function ExpensesTable({ expenses }) {
     )
   }
 
+  function handleClick(id) {
+    const filteredExpenses = expenses.filter((expense) => expense.id !== id);
+    dispatchExpenses(filteredExpenses);
+  }
+
   function TableRows() {
     if (expenses.length < 1) return '';
     return (
-      expenses.map((expense) => {
+      table.map((expense) => {
         const { id, value, currency, exchangeRates, paymentMethod, description, tag } = expense;
         const convertedValue = parseFloat(value) * parseFloat(exchangeRates[currency].ask);
         return (
@@ -35,12 +42,16 @@ function ExpensesTable({ expenses }) {
             <TableCell align="right">{ description }</TableCell>
             <TableCell align="right">{ paymentMethod }</TableCell>
             <TableCell align="right">{ tag }</TableCell>
-            <TableCell align="center"><Button><BackspaceIcon /></Button></TableCell>
+            <TableCell align="center"><Button onClick={ () => handleClick(id) }><BackspaceIcon /></Button></TableCell>
           </TableRow>
         )
       })
     )
   }
+
+  useEffect(() => {
+    setTable(expenses)
+  },[expenses])
 
   return (
     <section className="main-table">
@@ -60,4 +71,8 @@ const mapStateToProps = (state) => ({
   expenses: state.wallet.expenses,
 })
 
-export default connect(mapStateToProps, null)(ExpensesTable)
+const mapDispatchToProps = (dispatch) => ({
+  dispatchExpenses: (state) => dispatch(removeExpense(state)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(ExpensesTable)
